@@ -1,0 +1,48 @@
+{
+  "name": "clg-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/app.js",
+    "dev": "nodemon --watch src --exec ts-node src/app.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-jwt": "^8.5.1",
+    "gravatar": "^1.8.2",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.2.0",
+    "lodash": "^4.17.21",
+    "mongodb": "^6.12.0",
+    "mongoose": "^8.9.5",
+    "nodemailer": "^7.0.3",
+    "redis": "^5.6.1",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/dotenv-parse-variables": "^2.0.3",
+    "@types/express": "^5.0.0",
+    "@types/gravatar": "^1.8.6",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/lodash": "^4.17.20",
+    "@types/node": "^22.10.3",
+    "@types/nodemailer": "^6.4.17",
+    "cors": "^2.8.5",
+    "dotenv-parse-variables": "^2.0.0",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}
