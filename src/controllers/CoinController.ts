@@ -7,8 +7,46 @@ import {
 } from "../common/interfaces/Constants";
 import { logger } from "../utils/logger";
 import { CoinService } from "../services/CoinService";
+import CoinFactory from "../factories/CoinFactory";
 
 export default class CoinController {
+  public static async create(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const coinService = new CoinService();
+
+      const isExists = await coinService.findOne({
+        symbol: req.body.symbol,
+        name: req.body.name,
+      });
+      if (isExists) {
+        return sendResponse(
+          res,
+          {},
+          "Coin already exists",
+          RESPONSE_FAILURE,
+          RESPONSE_CODE.BAD_REQUEST
+        );
+      }
+
+      const generatedCoin = CoinFactory.generateCoin(req.body);
+      const createdCoin = await coinService.create(generatedCoin);
+      return sendResponse(
+        res,
+        createdCoin,
+        "Coin created successfully",
+        RESPONSE_SUCCESS,
+        RESPONSE_CODE.CREATED
+      );
+    } catch (error) {
+      logger.error(`CoinController.create() -> Error: ${error}`);
+      next(error);
+    }
+  }
+
   public static async getAll(
     req: Request,
     res: Response,

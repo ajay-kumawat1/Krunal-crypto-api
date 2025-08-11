@@ -1,7 +1,17 @@
 import { FilterQuery, ProjectionType, SortOrder } from "mongoose";
-import { Coin, ICoinDoc } from "../models/Coin";
+import { Coin, ICoinDoc, NewCoinDoc } from "../models/Coin";
 
 export class CoinService {
+  /**
+   * Creates a new coin.
+   *
+   * @param resource - The coin object to be created.
+   * @returns A promise that resolves to the created coin document.
+   */
+  public async create(resource: NewCoinDoc): Promise<ICoinDoc> {
+    return Coin.create(resource);
+  }
+
   /**
    * Finds coin documents based on the provided query and options.
    *
@@ -34,4 +44,17 @@ export class CoinService {
     return cursor;
   }
 
+  /**
+   * Find one coin document based on the provided query.
+   *
+   * @param query - The query object to filter the coin documents.
+   * @param projection - The options object to specify the projection of the coin documents.
+   * @returns A promise that resolves to the found coin document.
+   */
+  public async findOne(
+    query: FilterQuery<ICoinDoc>,
+    projection?: ProjectionType<ICoinDoc>
+  ): Promise<ICoinDoc | null> {
+    return Coin.findOne(query, projection);
+  }
 }
