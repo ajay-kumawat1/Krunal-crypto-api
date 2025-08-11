@@ -5,8 +5,6 @@ export interface ICoin {
   price: string;
   symbol: string;
   image?: string;
-  created?: Date;
-  updated?: Date;
 }
 
 export interface ICoinDoc extends ICoin, Document {}
@@ -21,8 +19,6 @@ const coinSchema = new Schema<ICoinDoc>(
     price: { type: String, required: true },
     symbol: { type: String, required: true },
     image: { type: String },
-    created: { type: Date, default: Date.now },
-    updated: { type: Date, default: Date.now },
   },
   {
     timestamps: true,
