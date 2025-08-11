@@ -3,6 +3,10 @@ import { model, Schema } from "mongoose";
 export interface ICoin {
   name: string;
   price: string;
+  symbol: string;
+  image?: string;
+  created?: Date;
+  updated?: Date;
 }
 
 export interface ICoinDoc extends ICoin, Document {}
@@ -15,6 +19,10 @@ const coinSchema = new Schema<ICoinDoc>(
   {
     name: { type: String, required: true },
     price: { type: String, required: true },
+    symbol: { type: String, required: true },
+    image: { type: String },
+    created: { type: Date, default: Date.now },
+    updated: { type: Date, default: Date.now },
   },
   {
     timestamps: true,
