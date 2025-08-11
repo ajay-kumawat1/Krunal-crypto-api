@@ -76,4 +76,37 @@ export default class CoinController {
       next(error);
     }
   }
+
+  public static async getById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const coinService = new CoinService();
+      const { id } = req.params;
+
+      const coin = await coinService.findOne({ _id: id });
+      if (!coin) {
+        return sendResponse(
+          res,
+          {},
+          "Coin not found",
+          RESPONSE_FAILURE,
+          RESPONSE_CODE.NOT_FOUND
+        );
+      }
+
+      return sendResponse(
+        res,
+        coin,
+        "Coin retrieved successfully",
+        RESPONSE_SUCCESS,
+        RESPONSE_CODE.SUCCESS
+      );
+    } catch (error) {
+      logger.error(`CoinController.getById() -> Error: ${error}`);
+      next(error);
+    }
+  }
 }
