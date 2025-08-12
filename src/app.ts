@@ -30,16 +30,8 @@ app.get("/", (_req: Request, res: Response) => {
 
 app.use("/", new IndexRoute(app).router);
 
-if (config.env == "vercel") {
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-}
-
-export default app;
-
-// app.listen(PORT, (err?: Error) => {
-//   err
-//     ? console.log(err)
-//     : console.log(`Server is running on http://localhost:${PORT}`);
-// });
+app.listen(PORT, (err?: Error) => {
+  err
+    ? console.log(err)
+    : console.log(`Server is running on http://localhost:${PORT}`);
+});
