@@ -15,7 +15,10 @@ export class CoinRoute extends RoutesConfig {
 
     this.app.route(`${this.path}/getAll`).get(CoinController.getAll);
 
-    this.app.route(`${this.path}/:id`).get(CoinController.getById);
+    this.app
+      .route(`${this.path}/:id`)
+      .get(CoinController.getById)
+      .put(CoinController.update);
 
     return this.app;
   }

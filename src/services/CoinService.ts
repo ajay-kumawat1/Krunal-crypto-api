@@ -1,4 +1,11 @@
-import { FilterQuery, ProjectionType, SortOrder } from "mongoose";
+import {
+  FilterQuery,
+  ObjectId,
+  ProjectionType,
+  QueryOptions,
+  SortOrder,
+  UpdateQuery,
+} from "mongoose";
 import { Coin, ICoinDoc, NewCoinDoc } from "../models/Coin";
 
 export class CoinService {
@@ -56,5 +63,21 @@ export class CoinService {
     projection?: ProjectionType<ICoinDoc>
   ): Promise<ICoinDoc | null> {
     return Coin.findOne(query, projection);
+  }
+
+  /**
+   * Updates a coin document by its ID.
+   *
+   * @param id - The ID of the coin document to update.
+   * @param updateDoc - The update object to apply to the coin document.
+   * @param options - The options object to specify additional update options.
+   * @returns A promise that resolves to the updated coin document.
+   */
+  public async updateById(
+    id: string | ObjectId,
+    updateDoc: UpdateQuery<ICoinDoc>,
+    options?: QueryOptions<ICoinDoc>
+  ): Promise<ICoinDoc | null> {
+    return Coin.findByIdAndUpdate(id, updateDoc, options);
   }
 }

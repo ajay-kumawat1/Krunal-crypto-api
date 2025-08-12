@@ -109,4 +109,50 @@ export default class CoinController {
       next(error);
     }
   }
+
+  public static async update(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const coinService = new CoinService();
+      const { id } = req.params;
+
+      const isExists = await coinService.findOne({ _id: id });
+      if (!isExists) {
+        return sendResponse(
+          res,
+          {},
+          "Coin not found",
+          RESPONSE_FAILURE,
+          RESPONSE_CODE.NOT_FOUND
+        );
+      }
+
+      const updatedCoin = await coinService.updateById(id, req.body, {
+        new: true,
+      });
+      if (!updatedCoin) {
+        return sendResponse(
+          res,
+          {},
+          "Coin not found or update failed",
+          RESPONSE_FAILURE,
+          RESPONSE_CODE.NOT_FOUND
+        );
+      }
+
+      return sendResponse(
+        res,
+        updatedCoin,
+        "Coin updated successfully",
+        RESPONSE_SUCCESS,
+        RESPONSE_CODE.SUCCESS
+      );
+    } catch (error) {
+      logger.error(`CoinController.update() -> Error: ${error}`);
+      next(error);
+    }
+  }
 }
