@@ -80,4 +80,14 @@ export class CoinService {
   ): Promise<ICoinDoc | null> {
     return Coin.findByIdAndUpdate(id, updateDoc, options);
   }
+
+  /**
+   * Deletes a coin document by its ID.
+   *
+   * @param id - The ID of the coin document to delete.
+   * @returns A promise that resolves to the deleted coin document.
+   */
+  public async deleteById(id: string | ObjectId): Promise<ICoinDoc | null> {
+    return Coin.findByIdAndDelete(id);
+  }
 }

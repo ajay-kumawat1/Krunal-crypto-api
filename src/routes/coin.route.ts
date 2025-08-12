@@ -18,7 +18,8 @@ export class CoinRoute extends RoutesConfig {
     this.app
       .route(`${this.path}/:id`)
       .get(CoinController.getById)
-      .put(CoinController.update);
+      .put(CoinController.update)
+      .delete(CoinController.delete);
 
     return this.app;
   }

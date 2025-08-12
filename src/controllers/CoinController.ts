@@ -155,4 +155,38 @@ export default class CoinController {
       next(error);
     }
   }
+
+  public static async delete(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const coinService = new CoinService();
+      const { id } = req.params;
+
+      const isExists = await coinService.findOne({ _id: id });
+      if (!isExists) {
+        return sendResponse(
+          res,
+          {},
+          "Coin not found",
+          RESPONSE_FAILURE,
+          RESPONSE_CODE.NOT_FOUND
+        );
+      }
+
+      await coinService.deleteById(id);
+      return sendResponse(
+        res,
+        {},
+        "Coin deleted successfully",
+        RESPONSE_SUCCESS,
+        RESPONSE_CODE.SUCCESS
+      );
+    } catch (error) {
+      logger.error(`CoinController.delete() -> Error: ${error}`);
+      next(error);
+    }
+  }
 }
