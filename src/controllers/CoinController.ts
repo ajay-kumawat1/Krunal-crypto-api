@@ -8,6 +8,7 @@ import {
 import { logger } from "../utils/logger";
 import { CoinService } from "../services/CoinService";
 import CoinFactory from "../factories/CoinFactory";
+import { uploadImageCloudinary } from "../utils/CloudnaryService";
 
 export default class CoinController {
   public static async create(
@@ -17,6 +18,7 @@ export default class CoinController {
   ): Promise<void> {
     try {
       const coinService = new CoinService();
+      const { file } = req;
 
       const isExists = await coinService.findOne({
         symbol: req.body.symbol,
@@ -30,6 +32,11 @@ export default class CoinController {
           RESPONSE_FAILURE,
           RESPONSE_CODE.BAD_REQUEST
         );
+      }
+
+      if (file) {
+        const coinImage = await uploadImageCloudinary(file, "Coins");
+        req.body.image = coinImage;
       }
 
       const generatedCoin = CoinFactory.generateCoin(req.body);

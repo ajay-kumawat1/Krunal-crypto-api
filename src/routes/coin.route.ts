@@ -2,6 +2,7 @@ import { Application } from "express";
 import { RoutesConfig } from "../common/interfaces/RoutesConfig";
 import CoinController from "../controllers/CoinController";
 import coinMiddleware from "../middlewares/coin.middleware";
+import { handleCoinMultipartData } from "../utils/fileHandler";
 
 export class CoinRoute extends RoutesConfig {
   public constructor(app: Application) {
@@ -11,7 +12,11 @@ export class CoinRoute extends RoutesConfig {
   public configureRoutes(): Application {
     this.app
       .route(`${this.path}`)
-      .post(coinMiddleware.validateCoin, CoinController.create);
+      .post(
+        coinMiddleware.validateCoin,
+        handleCoinMultipartData.single("image"),
+        CoinController.create
+      );
 
     this.app.route(`${this.path}/getAll`).get(CoinController.getAll);
 
