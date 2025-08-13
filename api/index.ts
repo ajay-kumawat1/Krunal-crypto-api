@@ -11,7 +11,7 @@ import cors from "cors";
 import { IndexRoute } from "./routes/index";
 
 const app: Application = express();
-const PORT = config.server.port ?? 5000;
+const PORT = config.server.port ?? 8001;
 connectDB();
 
 app.use(

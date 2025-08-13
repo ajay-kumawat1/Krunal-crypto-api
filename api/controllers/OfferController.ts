@@ -21,7 +21,8 @@ export default class OfferController {
         const uploadedImages = await Promise.all(
           files.map((file) => uploadImageCloudinary(file, "Offers"))
         );
-        req.body.images = uploadedImages;
+
+        req.body.image = uploadedImages;
       }
 
       const createdOffer = await Offer.create(req.body);
