@@ -29,7 +29,11 @@ const UserSchema = new Schema<IUserDoc>(
     password: { type: String, required: true },
     mobileNumber: { type: String },
     avatar: { type: String },
-    role: { type: String, enum: Object.values(UserRole), required: true },
+    role: {
+      type: String,
+      enum: Object.values(UserRole),
+      default: UserRole.EMPLOYEE,
+    },
     creationDate: { type: Date, default: Date.now },
     isDeleted: { type: Boolean, default: false },
     resetToken: { type: String },

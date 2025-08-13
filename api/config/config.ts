@@ -34,8 +34,8 @@ const config: IConfig = {
     logLevel: parsedEnv.LOG_LEVEL as string,
   },
   token: {
-    secret: parsedEnv.TOKEN_SECRET as string,
-    expiresIn: parsedEnv.TOKEN_EXPIRES_IN as string,
+    secret: parsedEnv.JWT_SECRET as string,
+    expiresIn: parsedEnv.JWT_EXPIRES_IN as string,
   },
   password: parsedEnv.PASSWORD as string,
 };

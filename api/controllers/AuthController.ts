@@ -23,15 +23,8 @@ export default class AuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const {
-        firstName,
-        lastName,
-        email,
-        password,
-        mobileNumber,
-        avatar,
-        role,
-      } = req.body;
+      const { firstName, lastName, email, password, mobileNumber, avatar } =
+        req.body;
 
       const userService = new UserService();
 
@@ -55,7 +48,6 @@ export default class AuthController {
           password: hashedPassword,
           mobileNumber,
           avatar,
-          role,
         })
       );
 
@@ -84,7 +76,7 @@ export default class AuthController {
           {},
           "User not found",
           RESPONSE_FAILURE,
-          RESPONSE_CODE.NO_CONTENT_FOUND
+          RESPONSE_CODE.BAD_REQUEST
         );
       }
 
