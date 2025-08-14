@@ -15,6 +15,7 @@ import UserFactory from "../factories/UserFactory";
 import { logger } from "../utils/logger";
 // import redisClient from "../common/redisClient";
 import { getResetPasswordEmail } from "../template/resetPasswordEmail";
+import { genSalt, hash } from "bcryptjs";
 
 export default class AuthController {
   public static async create(
@@ -117,9 +118,21 @@ export default class AuthController {
     next: NextFunction
   ) {
     try {
-      const { userId, oldPassword, newPassword } = req.body;
+      const saltRounds = 10;
+      const { oldPassword, newPassword, confirmNewPassword } = req.body;
 
-      const user = await UserService.findById(userId);
+      if (!req.user?.id) {
+        return sendResponse(
+          res,
+          {},
+          "User not authenticated",
+          RESPONSE_FAILURE,
+          RESPONSE_CODE.UNAUTHORIZED
+        );
+      }
+
+      const user = await UserService.findById(req.user.id);
+
       if (!user) {
         return sendResponse(
           res,
@@ -140,8 +153,32 @@ export default class AuthController {
         );
       }
 
-      user.password = await bcrypt.hash(newPassword, 10);
-      await user.save();
+      if (oldPassword === newPassword) {
+        return sendResponse(
+          res,
+          {},
+          "New password cannot be the same as old password",
+          RESPONSE_FAILURE,
+          RESPONSE_CODE.BAD_REQUEST
+        );
+      }
+
+      if (newPassword !== confirmNewPassword) {
+        return sendResponse(
+          res,
+          {},
+          "New passwords do not match",
+          RESPONSE_FAILURE,
+          RESPONSE_CODE.BAD_REQUEST
+        );
+      }
+
+      const salt = await genSalt(saltRounds);
+      user.password = await hash(newPassword.toString(), salt);
+
+      await UserService.updateById(user._id as string, {
+        $set: { password: user.password },
+      });
 
       return sendResponse(
         res,
