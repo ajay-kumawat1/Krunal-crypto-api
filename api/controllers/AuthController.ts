@@ -285,7 +285,7 @@ export default class AuthController {
       );
 
       await UserService.updateById(user._id as string, {
-        password: hashedPassword,
+        $set: { password: hashedPassword },
         $unset: { resetToken: "", expireToken: "" },
       });
 
