@@ -13,6 +13,7 @@ export interface IUser {
   creationDate: Date;
   isDeleted: boolean;
   resetToken: string;
+  expireToken: Date;
 }
 
 export interface IUserDoc extends IUser, Document {}
@@ -37,6 +38,7 @@ const UserSchema = new Schema<IUserDoc>(
     creationDate: { type: Date, default: Date.now },
     isDeleted: { type: Boolean, default: false },
     resetToken: { type: String },
+    expireToken: { type: Date },
   },
   { timestamps: true, toJSON: { virtuals: true } }
 );

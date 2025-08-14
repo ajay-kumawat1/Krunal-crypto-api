@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { sendResponse, signToken } from "../utils/common";
 import { randomBytes } from "crypto";
 import config from "../config/config";
+import moment from "moment";
 import {
   RESPONSE_CODE,
   RESPONSE_FAILURE,
@@ -199,8 +200,8 @@ export default class AuthController {
     next: NextFunction
   ) {
     try {
-      const { email, isNew } = req.body;
       const userService = new UserService();
+      const { email } = req.body;
 
       const user = await userService.findOne({ email });
       if (!user) {
@@ -214,14 +215,14 @@ export default class AuthController {
       }
 
       const token = randomBytes(32).toString("hex");
-      const resetLink = `${config.server.client}/${
-        isNew ? "auth/reset-password" : "reset-password"
-      }/${token}`;
+      const resetLink = `${config.server.client}/reset-password/${token}`;
 
       // Set reset token and expiry (1 hour)
       await UserService.updateById(user._id as string, {
-        resetToken: token,
-        expireToken: Date.now() + 3600000,
+        $set: {
+          resetToken: token,
+          expireToken: moment().add(1, "hour").toDate(),
+        },
       });
 
       const subject = "Your Password Reset Link";
