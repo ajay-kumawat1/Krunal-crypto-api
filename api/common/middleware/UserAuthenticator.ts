@@ -1,21 +1,22 @@
 import { NextFunction, Request, Response } from "express";
 import { sendResponse } from "../../utils/common";
 import { RESPONSE_CODE, RESPONSE_FAILURE } from "../interfaces/Constants";
-import { validateAuth0JWT } from "./ValidAuth0Jwt";
 import { UserRole } from "../enum/Role";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import config from "../../config/config";
+import { UserService } from "../../services/UserService";
 
 export default class AuthAuthenticator {
   /**
    * Middleware function to check if the user is authenticated.
    */
   public static isAuthenticated() {
-    return [AuthAuthenticator.validateJWT, ...validateAuth0JWT()];
+    return [AuthAuthenticator.validateJWT];
   }
 
   public static isAdminAuthenticated() {
     return [
       AuthAuthenticator.validateJWT,
-      ...validateAuth0JWT(),
       AuthAuthenticator.isAdminLoggedIn,
     ];
   }
@@ -25,21 +26,23 @@ export default class AuthAuthenticator {
     res: Response,
     next: NextFunction
   ): Promise<Response | void> {
+    const authToken = req.headers.authorization;
+    if (!authToken || !authToken.startsWith("Bearer")) {
+      return sendResponse(res, {}, "You must login first", RESPONSE_FAILURE, RESPONSE_CODE.UNAUTHORIZED);
+    }
+    const token = authToken.split(" ")[1];
+
     try {
-      const token = req.header("x-auth-token") ?? null;
-      if (token) {
-        next();
+      const decode = jwt.verify(token, config.token.secret as string) as JwtPayload;
+      const user = await UserService.findById(decode.user);
+      if (user) {
+        req.user = decode.user;
+        return next();
       } else {
-        return sendResponse(
-          res,
-          {},
-          "Authentication token is missing",
-          RESPONSE_FAILURE,
-          RESPONSE_CODE.UNAUTHORIZED
-        );
+        return sendResponse(res, {}, "Invalid token", RESPONSE_FAILURE, RESPONSE_CODE.FORBIDDEN);
       }
+
     } catch (error) {
-      console.error("JWT validation error:", error);
       return sendResponse(
         res,
         {},
